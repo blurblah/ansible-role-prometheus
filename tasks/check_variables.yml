@@ -1,0 +1,5 @@
+---
+- name: Check scrape configs
+  fail:
+    msg: Undefined variables prometheus_scrape_configs
+  when: prometheus_scrape_configs is undefined

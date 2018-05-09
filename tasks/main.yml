@@ -1,0 +1,28 @@
+---
+- import_tasks: check_system.yml
+- import_tasks: check_variables.yml
+
+- name: Create a prometheus config directory
+  shell: mkdir -p /etc/prometheus
+
+- name: Copy a prometheus config template file
+  template:
+    src: prometheus.yml.j2
+    dest: /etc/prometheus/prometheus.yml
+    mode: 0644
+
+- name: Run Prometheus
+  docker_container:
+    name: prom
+    image: 'prom/prometheus:{{ prometheus_version }}'
+    ports:
+      - '{{ prometheus_port }}:9090'
+    volumes:
+      - /etc/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - /etc/prometheus/data:/prometheus/data
+    user: root
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.retention={{ prometheus_tsdb_retention }}'
+    recreate: yes
+    restart_policy: unless-stopped

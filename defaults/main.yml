@@ -1,0 +1,8 @@
+---
+prometheus_version: latest
+prometheus_port: 9090
+prometheus_global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+  scrape_timeout: 10s
+prometheus_tsdb_retention: 60d
